@@ -14,8 +14,7 @@ spec.loader.exec_module(module)
 
 
 def vector_paths():
-    yield from sorted((ROOT / "vectors" / "valid").glob("*.json"))
-    yield from sorted((ROOT / "vectors" / "contradictory").glob("*.json"))
+    yield from sorted((ROOT / "vectors").rglob("*.json"))
 
 
 def test_schema_is_valid_json_and_declares_profile():
