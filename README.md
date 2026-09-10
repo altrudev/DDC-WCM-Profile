@@ -121,6 +121,14 @@ It evaluates whether WCM evidence and independently observed evidence form a suf
 
 Conformance to this profile is not equivalent to secure deployment.
 
+## Upstream attribution
+
+**Weight Custody Manifest (WCM)** is an upstream open standard introduced publicly by **OPAQUE Systems**. **Imran Siddique, Chief Platform Officer at OPAQUE Systems**, is prominently associated with its public launch and is quoted by OPAQUE explaining WCM's purpose and trust model.
+
+DDC-WCM Profile is an independent Altru.dev interoperability and assurance project. It does not claim authorship of WCM and is not affiliated with, sponsored by, endorsed by, or maintained by OPAQUE Systems, Imran Siddique, AgenTrust, or the WCM maintainers.
+
+See [ATTRIBUTION.md](ATTRIBUTION.md) for the full upstream attribution and independence statement.
+
 ## Relationship to WCM
 
 WCM remains authoritative for WCM verification. This profile consumes WCM results as an authoritative evidence channel and does not reimplement or weaken WCM's own verification requirements.
