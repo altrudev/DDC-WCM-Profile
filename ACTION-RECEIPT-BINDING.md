@@ -37,9 +37,9 @@ The receipt SHOULD preserve at least:
 
 ## Canonicalization
 
-A production binding MUST define a canonical serialization before hashing.
+Interoperable profile v0.1 bindings SHOULD use RFC 8785 JSON Canonicalization Scheme (JCS) and SHA-256 as defined in [CANONICALIZATION.md](CANONICALIZATION.md).
 
-Until a canonicalization profile is standardized, implementations MUST NOT claim cross-implementation digest equivalence.
+A receipt claiming interoperable digest equivalence MUST bind the exact canonical evidence bytes used for the assurance decision. Redacted or transformed evidence is a distinct artifact and requires its own digest.
 
 ## Execution divergence
 
