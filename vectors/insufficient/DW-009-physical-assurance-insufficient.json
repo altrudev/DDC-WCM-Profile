@@ -1,0 +1,54 @@
+{
+  "id": "DW-009",
+  "title": "Physical assurance insufficient",
+  "expected_decision": "INSUFFICIENT_EVIDENCE",
+  "expected_reason_codes": [
+    "PHYSICAL_ASSURANCE_INSUFFICIENT"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-009"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "VALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {
+      "assessment": "FRESH"
+    },
+    "lineage": {
+      "assessment": "CONSISTENT"
+    },
+    "physical": {
+      "assessment": "INSUFFICIENT"
+    },
+    "jurisdiction": {
+      "assessment": "CONSISTENT"
+    },
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "PASS"
+    },
+    "frequency": {
+      "assessment": "NORMAL"
+    },
+    "contradictions": [],
+    "uncertainty": {
+      "assessment": "LOW"
+    }
+  }
+}
