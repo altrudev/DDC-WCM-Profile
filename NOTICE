@@ -1,0 +1,16 @@
+DDC-WCM Profile
+Copyright 2026 Altru.dev
+
+This product includes an independent interoperability profile designed to
+consume evidence from the Weight Custody Manifest (WCM) ecosystem.
+
+Weight Custody Manifest (WCM) is upstream work introduced publicly by
+OPAQUE Systems and maintained in the AgenTrust ecosystem. See ATTRIBUTION.md
+for upstream references and the independence statement.
+
+No affiliation, sponsorship, endorsement, certification, or official status
+is implied by interoperability references to WCM, OPAQUE Systems, AgenTrust,
+or their contributors.
+
+The proprietary DDC assurance engine and unpublished DDC methods are not
+distributed in this repository.
