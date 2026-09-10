@@ -1,0 +1,65 @@
+{
+  "id": "DW-004",
+  "title": "Temporally anomalous valid requests",
+  "expected_decision": "REQUIRE_HUMAN",
+  "expected_reason_codes": [
+    "FREQUENCY_ANOMALY"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-004"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "VALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {
+      "assessment": "FRESH"
+    },
+    "lineage": {
+      "assessment": "CONSISTENT"
+    },
+    "physical": {
+      "assessment": "SEPARATELY_EVALUATED"
+    },
+    "jurisdiction": {
+      "assessment": "CONSISTENT"
+    },
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "PASS"
+    },
+    "frequency": {
+      "assessment": "ANOMALOUS",
+      "observation": "high-rate release-request burst relative to baseline"
+    },
+    "contradictions": [
+      {
+        "contradiction_id": "C-DW004",
+        "dimensions": [
+          "frequency"
+        ],
+        "severity": "high",
+        "reason_code": "FREQUENCY_ANOMALY",
+        "resolved": false
+      }
+    ],
+    "uncertainty": {
+      "assessment": "MEDIUM"
+    }
+  }
+}
