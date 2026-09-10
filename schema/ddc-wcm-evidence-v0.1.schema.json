@@ -4,7 +4,7 @@
   "title": "DDC-WCM Evidence Bundle v0.1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["profile","request","subject","authority","wcm","executor","runtime","freshness","lineage","physical","jurisdiction","supply_chain","frequency","contradictions","uncertainty","decision"],
+  "required": ["profile","request","subject","authority","wcm","executor","runtime","freshness","lineage","physical","jurisdiction","supply_chain","frequency","contradictions","uncertainty"],
   "properties": {
     "profile": {"const":"ddc-wcm/0.1"},
     "request": {
