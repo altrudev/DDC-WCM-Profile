@@ -13,11 +13,6 @@ import json
 import sys
 from pathlib import Path
 
-try:
-    import jsonschema
-except ImportError:
-    print("ERROR: missing dependency 'jsonschema'. Install with: pip install jsonschema", file=sys.stderr)
-    sys.exit(2)
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schema" / "ddc-wcm-evidence-v0.1.schema.json"
@@ -131,6 +126,12 @@ def public_decision(bundle: dict) -> tuple[str, list[str]]:
 
 
 def main() -> int:
+    try:
+        import jsonschema
+    except ImportError:
+        print("ERROR: missing dependency 'jsonschema'. Install with: pip install jsonschema", file=sys.stderr)
+        return 2
+
     schema = json.loads(SCHEMA_PATH.read_text())
     validator_cls = jsonschema.validators.validator_for(schema)
     validator_cls.check_schema(schema)
