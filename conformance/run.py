@@ -16,7 +16,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schema" / "ddc-wcm-evidence-v0.1.schema.json"
-VECTOR_DIRS = [ROOT / "vectors" / "valid", ROOT / "vectors" / "contradictory"]
 
 BLOCKING_CODES = {
     "WCM_INVALID",
@@ -140,10 +139,7 @@ def main() -> int:
     failures = 0
     total = 0
 
-    paths = []
-    for directory in VECTOR_DIRS:
-        if directory.exists():
-            paths.extend(sorted(directory.glob("*.json")))
+    paths = sorted((ROOT / "vectors").rglob("*.json"))
 
     if not paths:
         print("ERROR: no vectors found", file=sys.stderr)
