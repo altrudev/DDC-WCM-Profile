@@ -1,0 +1,52 @@
+{
+  "id": "DW-000",
+  "title": "Valid baseline",
+  "expected_decision": "ALLOW",
+  "expected_reason_codes": [],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-000"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "VALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {
+      "assessment": "FRESH"
+    },
+    "lineage": {
+      "assessment": "CONSISTENT"
+    },
+    "physical": {
+      "assessment": "SEPARATELY_EVALUATED"
+    },
+    "jurisdiction": {
+      "assessment": "CONSISTENT"
+    },
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "PASS"
+    },
+    "frequency": {
+      "assessment": "NORMAL"
+    },
+    "contradictions": [],
+    "uncertainty": {
+      "assessment": "LOW"
+    }
+  }
+}
