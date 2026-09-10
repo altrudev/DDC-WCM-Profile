@@ -1,0 +1,50 @@
+{
+  "id": "DW-001",
+  "title": "Valid but wrong authority",
+  "expected_decision": "BLOCK",
+  "expected_reason_codes": [
+    "AUTHORITY_SCOPE_MISMATCH"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-001"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "pinned_authority": "builder-key-A",
+      "presented_authority": "builder-key-B"
+    },
+    "wcm": {
+      "verification_result": "VALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {},
+    "lineage": {},
+    "physical": {},
+    "jurisdiction": {},
+    "supply_chain": {},
+    "frequency": {},
+    "contradictions": [
+      {
+        "contradiction_id": "C-DW001",
+        "dimensions": [
+          "authority"
+        ],
+        "severity": "critical",
+        "reason_code": "AUTHORITY_SCOPE_MISMATCH",
+        "resolved": false
+      }
+    ],
+    "uncertainty": {}
+  }
+}
