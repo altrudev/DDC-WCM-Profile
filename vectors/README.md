@@ -19,3 +19,14 @@ Future vectors should separate:
 - execution-divergence cases.
 
 A conforming test harness MUST include positive ALLOW cases so an implementation cannot pass by rejecting every request.
+
+
+## Additional normative cases
+
+- **DW-006 — WCM verification failure**: WCM invalid. Expected: BLOCK.
+- **DW-007 — WCM verification unknown**: WCM validity cannot be established. Expected: INSUFFICIENT_EVIDENCE.
+- **DW-008 — stale evidence**: load-bearing evidence is stale. Expected: INSUFFICIENT_EVIDENCE.
+- **DW-009 — physical assurance insufficient**: cryptographic state may be valid while required independent physical assurance is insufficient. Expected: INSUFFICIENT_EVIDENCE.
+- **DW-010 — unresolved critical contradiction**: a critical contradiction without a specialized public reason code still prevents ALLOW. Expected: BLOCK with CRITICAL_CONTRADICTION.
+
+The harness discovers vector JSON recursively so new categories are automatically included.
