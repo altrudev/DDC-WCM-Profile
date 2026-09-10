@@ -1,0 +1,67 @@
+{
+  "id": "DW-005",
+  "title": "Valid attestation with executor-lineage conflict",
+  "expected_decision": "BLOCK",
+  "expected_reason_codes": [
+    "EXECUTOR_LINEAGE_CONTRADICTION"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-005"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "VALID",
+      "evidence_hash": "sha256:valid-attestation"
+    },
+    "executor": {
+      "executor_id": "exec-presented",
+      "independently_pinned_executor_id": "exec-known"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {
+      "assessment": "FRESH"
+    },
+    "lineage": {
+      "assessment": "CONTRADICTORY"
+    },
+    "physical": {
+      "assessment": "UNKNOWN"
+    },
+    "jurisdiction": {
+      "assessment": "CONSISTENT"
+    },
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "PASS"
+    },
+    "frequency": {
+      "assessment": "NORMAL"
+    },
+    "contradictions": [
+      {
+        "contradiction_id": "C-DW005",
+        "dimensions": [
+          "executor",
+          "lineage"
+        ],
+        "severity": "critical",
+        "reason_code": "EXECUTOR_LINEAGE_CONTRADICTION",
+        "resolved": false
+      }
+    ],
+    "uncertainty": {
+      "assessment": "HIGH"
+    }
+  }
+}
