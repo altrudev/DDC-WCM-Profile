@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ddcal.ca/schema/ddc-wcm-evidence-v0.1.schema.json",
+  "title": "DDC-WCM Evidence Bundle v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "request", "subject", "wcm", "contradictions", "decision"],
+  "properties": {
+    "profile": { "const": "ddc-wcm/0.1" },
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["operation", "request_id"],
+      "properties": {
+        "operation": { "type": "string", "minLength": 1 },
+        "request_id": { "type": "string", "minLength": 1 },
+        "requested_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["weights_hash", "manifest_hash"],
+      "properties": {
+        "model_id": { "type": "string" },
+        "weights_hash": { "type": "string", "minLength": 1 },
+        "manifest_id": { "type": "string" },
+        "manifest_hash": { "type": "string", "minLength": 1 }
+      }
+    },
+    "authority": { "type": "object", "additionalProperties": true },
+    "wcm": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["verification_result"],
+      "properties": {
+        "verification_result": {
+          "enum": ["VALID", "INVALID", "UNKNOWN"]
+        },
+        "spec_version": { "type": "string" },
+        "evidence_hash": { "type": "string" },
+        "challenge_hash": { "type": "string" },
+        "attestation_hashes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "measurement": { "type": "string" },
+        "verified_at": { "type": "string", "format": "date-time" },
+        "lease": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "executor": { "type": "object", "additionalProperties": true },
+    "runtime": { "type": "object", "additionalProperties": true },
+    "freshness": { "type": "object", "additionalProperties": true },
+    "lineage": { "type": "object", "additionalProperties": true },
+    "physical": { "type": "object", "additionalProperties": true },
+    "jurisdiction": { "type": "object", "additionalProperties": true },
+    "supply_chain": { "type": "object", "additionalProperties": true },
+    "frequency": { "type": "object", "additionalProperties": true },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["contradiction_id", "severity", "resolved"],
+        "properties": {
+          "contradiction_id": { "type": "string", "minLength": 1 },
+          "dimensions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "severity": {
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "reason_code": { "type": "string" },
+          "resolved": { "type": "boolean" }
+        }
+      }
+    },
+    "uncertainty": { "type": "object", "additionalProperties": true },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result", "reason_codes"],
+      "properties": {
+        "result": {
+          "enum": ["ALLOW", "BLOCK", "REQUIRE_HUMAN", "INSUFFICIENT_EVIDENCE"]
+        },
+        "policy": { "type": "string" },
+        "reason_codes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
