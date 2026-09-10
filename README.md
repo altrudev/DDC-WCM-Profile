@@ -146,3 +146,25 @@ examples/
 Apache-2.0 for the public profile, schemas, examples, and test vectors unless otherwise noted.
 
 The DDC assurance engine and associated proprietary methods are not licensed or distributed by this repository.
+
+## Public conformance harness
+
+The repository includes a deliberately limited public harness that validates only the open interoperability contract.
+
+```bash
+python -m pip install -r requirements.txt
+python conformance/run.py
+```
+
+The harness:
+
+- validates the JSON Schema;
+- validates every public vector input;
+- applies deterministic public invariants;
+- checks expected decisions and required public reason codes;
+- includes a positive ALLOW baseline so "block everything" cannot pass.
+
+It does **not** implement proprietary DDC reasoning, radial-frequency transforms, hidden dimensions, learned baselines, weighting, threshold derivation, or private contradiction-resolution logic.
+
+A successful public conformance run therefore means **profile-contract conformance**, not full DDC assurance and not secure-deployment certification.
+
