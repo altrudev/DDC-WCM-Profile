@@ -1,0 +1,54 @@
+{
+  "id": "DW-006",
+  "title": "WCM verification failure",
+  "expected_decision": "BLOCK",
+  "expected_reason_codes": [
+    "WCM_INVALID"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-006"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "INVALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {
+      "assessment": "FRESH"
+    },
+    "lineage": {
+      "assessment": "CONSISTENT"
+    },
+    "physical": {
+      "assessment": "SEPARATELY_EVALUATED"
+    },
+    "jurisdiction": {
+      "assessment": "CONSISTENT"
+    },
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "PASS"
+    },
+    "frequency": {
+      "assessment": "NORMAL"
+    },
+    "contradictions": [],
+    "uncertainty": {
+      "assessment": "LOW"
+    }
+  }
+}
