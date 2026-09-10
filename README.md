@@ -14,6 +14,8 @@ The combination is architectural rather than organizational. WCM remains authori
 
 See [RATIONALE.md](RATIONALE.md) for the full design rationale.
 
+The reviewed upstream WCM baseline is pinned in [UPSTREAM-COMPATIBILITY.md](UPSTREAM-COMPATIBILITY.md), so interoperability claims do not silently drift as pre-1.0 WCM evolves.
+
 The DDC–WCM Profile defines a boundary between:
 
 - **WCM validity** — whether WCM custody evidence satisfies WCM rules;
@@ -140,6 +142,18 @@ WCM remains authoritative for WCM verification. This profile consumes WCM result
 This project is an independent interoperability effort and is not affiliated with, endorsed by, or a substitute for the WCM project or its maintainers.
 
 ## Repository layout
+
+Key normative/supporting documents include:
+
+- [PROFILE.md](PROFILE.md) — interoperability semantics
+- [RATIONALE.md](RATIONALE.md) — why DDC and WCM are combined
+- [ATTRIBUTION.md](ATTRIBUTION.md) — upstream attribution and independence
+- [UPSTREAM-COMPATIBILITY.md](UPSTREAM-COMPATIBILITY.md) — pinned WCM review baseline
+- [REASON-CODES.md](REASON-CODES.md) — public reason-code semantics
+- [CANONICALIZATION.md](CANONICALIZATION.md) — digest canonicalization
+- [ACTION-RECEIPT-BINDING.md](ACTION-RECEIPT-BINDING.md) — receipt binding
+- [VERSIONING.md](VERSIONING.md) — compatibility rules
+- [SECURITY.md](SECURITY.md) — disclosure/security policy
 
 ```text
 PROFILE.md
