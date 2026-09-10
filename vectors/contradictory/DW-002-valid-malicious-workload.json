@@ -1,0 +1,54 @@
+{
+  "id": "DW-002",
+  "title": "Valid but malicious workload",
+  "expected_decision": "BLOCK",
+  "expected_reason_codes": [
+    "SUPPLY_CHAIN_POLICY_FAILURE"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-002"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "VALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "measurement": "sha256:approved-image"
+    },
+    "freshness": {},
+    "lineage": {},
+    "physical": {},
+    "jurisdiction": {},
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "FAIL",
+      "reason": "prohibited behavior detected"
+    },
+    "frequency": {},
+    "contradictions": [
+      {
+        "contradiction_id": "C-DW002",
+        "dimensions": [
+          "supply_chain",
+          "runtime"
+        ],
+        "severity": "critical",
+        "reason_code": "SUPPLY_CHAIN_POLICY_FAILURE",
+        "resolved": false
+      }
+    ],
+    "uncertainty": {}
+  }
+}
