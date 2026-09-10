@@ -1,0 +1,47 @@
+{
+  "profile": "ddc-wcm/0.1",
+  "request": {
+    "operation": "wcm.key_release",
+    "request_id": "example-001",
+    "requested_at": "2026-09-10T19:00:00Z"
+  },
+  "subject": {
+    "model_id": "example-model",
+    "weights_hash": "sha256:example",
+    "manifest_id": "example-manifest",
+    "manifest_hash": "sha256:example-manifest"
+  },
+  "authority": {
+    "status": "consistent"
+  },
+  "wcm": {
+    "verification_result": "VALID",
+    "spec_version": "example",
+    "evidence_hash": "sha256:example-wcm-evidence",
+    "attestation_hashes": ["sha256:example-attestation"]
+  },
+  "executor": {
+    "executor_id": "example-executor"
+  },
+  "runtime": {
+    "state": "ready"
+  },
+  "freshness": {},
+  "lineage": {},
+  "physical": {
+    "assessment": "not_independently_established"
+  },
+  "jurisdiction": {
+    "required": ["CA"],
+    "assessment": "consistent"
+  },
+  "supply_chain": {},
+  "frequency": {},
+  "contradictions": [],
+  "uncertainty": {},
+  "decision": {
+    "result": "ALLOW",
+    "policy": "ddc-wcm-policy/0.1",
+    "reason_codes": []
+  }
+}
