@@ -8,7 +8,11 @@
 
 ## Why this exists
 
-WCM can establish that cryptographic custody evidence satisfies a defined policy. That is necessary, but a valid cryptographic assertion can still exist inside a wider environment whose authority, identity, lineage, jurisdiction, physical state, runtime state, or temporal behavior is contradictory.
+WCM was selected as the first external interoperability target because it exposes a clear assurance boundary: a cryptographically valid custody assertion can still exist inside a wider system state that is contradictory, stale, wrongly authorized, physically uncertain, or otherwise incoherent.
+
+The combination is architectural rather than organizational. WCM remains authoritative for custody validity; DDC independently evaluates whether that evidence remains coherent with the wider execution context. DDC does not replace WCM, and this profile does not make DDC dependent on WCM.
+
+See [RATIONALE.md](RATIONALE.md) for the full design rationale.
 
 The DDC–WCM Profile defines a boundary between:
 
