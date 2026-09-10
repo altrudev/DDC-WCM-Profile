@@ -1,0 +1,78 @@
+{
+  "id": "DW-003",
+  "title": "Contradictory jurisdiction evidence",
+  "expected_decision": "REQUIRE_HUMAN",
+  "expected_reason_codes": [
+    "JURISDICTION_CONTRADICTION"
+  ],
+  "input": {
+    "profile": "ddc-wcm/0.1",
+    "request": {
+      "operation": "wcm.key_release",
+      "request_id": "dw-003"
+    },
+    "subject": {
+      "weights_hash": "sha256:weights-A",
+      "manifest_hash": "sha256:manifest-A"
+    },
+    "authority": {
+      "status": "consistent"
+    },
+    "wcm": {
+      "verification_result": "VALID"
+    },
+    "executor": {
+      "executor_id": "exec-1"
+    },
+    "runtime": {
+      "state": "ready"
+    },
+    "freshness": {
+      "assessment": "FRESH"
+    },
+    "lineage": {
+      "assessment": "CONSISTENT"
+    },
+    "physical": {
+      "assessment": "SEPARATELY_EVALUATED"
+    },
+    "jurisdiction": {
+      "required": [
+        "CA"
+      ],
+      "claimed": "CA",
+      "assessment": "CONTRADICTORY",
+      "evidence": [
+        {
+          "type": "provider_region",
+          "value": "CA"
+        },
+        {
+          "type": "independent_observation",
+          "value": "NL"
+        }
+      ]
+    },
+    "supply_chain": {
+      "integrity": "VALID",
+      "acceptability": "PASS"
+    },
+    "frequency": {
+      "assessment": "NORMAL"
+    },
+    "contradictions": [
+      {
+        "contradiction_id": "C-DW003",
+        "dimensions": [
+          "jurisdiction"
+        ],
+        "severity": "high",
+        "reason_code": "JURISDICTION_CONTRADICTION",
+        "resolved": false
+      }
+    ],
+    "uncertainty": {
+      "assessment": "MEDIUM"
+    }
+  }
+}
