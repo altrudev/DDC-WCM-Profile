@@ -1,0 +1,71 @@
+{
+  "manifest_version": "1.0-example",
+  "weights_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "builder": {
+    "identity": "did:example:builder",
+    "signing_key": "did:key:builder-example"
+  },
+  "release_terms": {
+    "license": "example-evaluation",
+    "permitted_derivatives": "fine-tuning permitted under example terms",
+    "permitted_environments": [
+      "confidential-vm"
+    ],
+    "jurisdiction_restriction": "CA",
+    "derivatives": "fine-tune-only"
+  },
+  "release_policy": {
+    "required_assurance_tier": "hardware-attested",
+    "physical_hardening": "not-required",
+    "trusted_time_source": "lease-with-op-count-hybrid",
+    "required_hw_platform": [
+      "amd-sev-snp"
+    ],
+    "required_serving_image": {
+      "signer": "did:example:serving-signer",
+      "release_rule": "measurement must be current",
+      "accepted_measurements": [
+        {
+          "measurement": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "status": "current"
+        }
+      ]
+    },
+    "key_release_mode": "attestation-gated",
+    "replay_protection": "kbs-nonce-required",
+    "attestation_revocation_check": "live-per-release"
+  },
+  "custody": {
+    "custodian": "Example Custodian",
+    "custodian_type": "customer-self-custody",
+    "kbs_image": {
+      "measurement": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "signer": "did:example:kbs-signer"
+    },
+    "enclave_id": "example-enclave",
+    "attestation_cadence": "PT15M",
+    "kbs_attestation_cadence": "PT6H"
+  },
+  "base_confidentiality": "confidential",
+  "deployment_model": "builder-to-customer",
+  "derived_from": null,
+  "rights_holder": {
+    "base": "Example Builder",
+    "derivative": null
+  },
+  "provenance": {
+    "model_signing": {
+      "method": "openssf-model-signing",
+      "signed_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  },
+  "signatures": [
+    {
+      "role": "builder",
+      "signer": "did:example:builder",
+      "algorithm": "Ed25519",
+      "key_id": "builder-key-1",
+      "signature_value": "EXAMPLE-NONCRYPTOGRAPHIC-FIXTURE"
+    }
+  ]
+}
