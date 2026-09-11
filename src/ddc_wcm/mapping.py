@@ -1,0 +1,16 @@
+from __future__ import annotations
+PINNED_WCM_REVISION="718d6e308e7988d4d5af41fdf71ac44738fc49d5"
+PINNED_WCM_SPEC="v0.15"
+
+def map_manifest(manifest:dict,manifest_hash:str,verification_result:str="UNKNOWN",upstream_revision:str=PINNED_WCM_REVISION,spec_version:str=PINNED_WCM_SPEC)->dict:
+    rt=manifest.get("release_terms",{}); rp=manifest.get("release_policy",{}); custody=manifest.get("custody",{}); builder=manifest.get("builder",{}); serving=rp.get("required_serving_image",{}); rights=manifest.get("rights_holder") or {}; provenance=manifest.get("provenance") or {}; ms=provenance.get("model_signing") or {}
+    accepted=[x["measurement"] for x in serving.get("accepted_measurements",[]) if x.get("status") in {"current","retiring"} and x.get("measurement")]
+    jr=rt.get("jurisdiction_restriction")
+    b={"profile":"ddc-wcm/0.1","request":{"operation":"wcm.key_release","request_id":"manifest-mapping-unbound"},"subject":{"weights_hash":manifest["weights_hash"],"manifest_hash":manifest_hash},"authority":{"status":"unknown","presented_authority":builder.get("identity",""),"builder_signing_key":builder.get("signing_key",""),"custodian":custody.get("custodian",""),"custodian_type":custody.get("custodian_type",""),"permitted_environments":rt.get("permitted_environments",[]),"derivative_policy":rt.get("derivatives") or ""},"wcm":{"verification_result":verification_result,"spec_version":spec_version,"manifest_version":manifest.get("manifest_version",""),"upstream_revision":upstream_revision},"executor":{},"runtime":{"approved_measurements":accepted,"required_serving_image_signer":serving.get("signer",""),"required_hw_platforms":rp.get("required_hw_platform",[]),"kbs_measurement":(custody.get("kbs_image") or {}).get("measurement",""),"enclave_id":custody.get("enclave_id","")},"freshness":{"assessment":"UNKNOWN","trusted_time_source":rp.get("trusted_time_source","none-best-effort"),"attestation_cadence":custody.get("attestation_cadence",""),"kbs_attestation_cadence":custody.get("kbs_attestation_cadence"),"attestation_revocation_check":rp.get("attestation_revocation_check")},"lineage":{"assessment":"UNKNOWN","derivative_policy":rt.get("derivatives")},"physical":{"assessment":"UNKNOWN","required_hardening":rp.get("physical_hardening","not-required")},"jurisdiction":{"required":[jr] if jr else [],"assessment":"NOT_ESTABLISHED" if jr else "UNKNOWN","evidence":[]},"supply_chain":{"integrity":"UNKNOWN","acceptability":"UNKNOWN","expected_serving_image_signer":serving.get("signer",""),"expected_kbs_signer":(custody.get("kbs_image") or {}).get("signer","")},"frequency":{"assessment":"UNKNOWN"},"contradictions":[],"uncertainty":{"assessment":"HIGH","notes":["Manifest mapping contains policy assertions, not observed runtime state.","Independent WCM verification and contextual evidence are still required."]}}
+    if manifest.get("derived_from"): b["lineage"]["parent_weights_hash"]=manifest["derived_from"]
+    if rights.get("base"): b["lineage"]["rights_holder_base"]=rights["base"]
+    if "derivative" in rights: b["lineage"]["rights_holder_derivative"]=rights.get("derivative")
+    if ms.get("signed_digest"): b["supply_chain"]["model_signing_digest"]=ms["signed_digest"]
+    for section in ("authority","runtime","supply_chain"):
+        for key in [k for k,v in b[section].items() if v==""]: del b[section][key]
+    return b
