@@ -194,3 +194,19 @@ It does **not** implement proprietary DDC reasoning, radial-frequency transforms
 
 A successful public conformance run therefore means **profile-contract conformance**, not full DDC assurance and not secure-deployment certification.
 
+
+## External testing
+
+Evidence does not need to be committed to this repository. A local clone can validate any external DDC-WCM bundle by filesystem path:
+
+```bash
+python conformance/check_external.py /path/to/evidence.json --json
+```
+
+See [docs/EXTERNAL-TESTING.md](docs/EXTERNAL-TESTING.md) for clean-machine, CI, and governed-executor testing.
+
+## WCM field mapping
+
+The pinned WCM v0.15 → DDC-WCM v0.1 mapping is documented in [mappings/WCM-v0.15-to-DDC-WCM-v0.1.md](mappings/WCM-v0.15-to-DDC-WCM-v0.1.md).
+
+The mapper is deliberately conservative: policy assertions in a WCM manifest are not promoted into observed runtime, physical, or jurisdiction facts. A manifest-only mapping cannot produce ALLOW.
