@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ddc-wcm-profile"
+version = "0.1.0"
+description = "Public interoperability and conformance CLI for the DDC-WCM Profile"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Altru.dev" }]
+dependencies = ["jsonschema>=4.23,<5"]
+
+[project.urls]
+Homepage = "https://github.com/altrudev/DDC-WCM-Profile"
+Source = "https://github.com/altrudev/DDC-WCM-Profile"
+
+[project.scripts]
+ddc-wcm = "ddc_wcm.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ddc_wcm"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"schema/ddc-wcm-evidence-v0.1.schema.json" = "ddc_wcm/data/ddc-wcm-evidence-v0.1.schema.json"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
