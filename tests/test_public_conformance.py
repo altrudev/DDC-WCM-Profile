@@ -47,3 +47,44 @@ def test_positive_vector_prevents_block_everything_implementation():
     decision, reasons = module.public_decision(vector["input"])
     assert decision == "ALLOW"
     assert not reasons
+
+
+def test_wcm_manifest_mapping_is_conservative():
+    mapper_path = ROOT / "conformance" / "map_wcm_manifest.py"
+    mapper_spec = importlib.util.spec_from_file_location("ddc_wcm_mapper", mapper_path)
+    mapper = importlib.util.module_from_spec(mapper_spec)
+    assert mapper_spec and mapper_spec.loader
+    mapper_spec.loader.exec_module(mapper)
+
+    manifest = json.loads(
+        (ROOT / "fixtures" / "upstream" / "wcm-v0.15-manifest.synthetic.json").read_text()
+    )
+    expected = json.loads(
+        (ROOT / "fixtures" / "mapped" / "ddc-wcm-from-wcm-v0.15.synthetic.json").read_text()
+    )
+
+    actual = mapper.map_manifest(
+        manifest,
+        "sha256:" + ("e" * 64),
+        verification_result="UNKNOWN",
+    )
+
+    assert actual == expected
+
+    decision, reasons = module.public_decision(actual)
+    assert decision == "INSUFFICIENT_EVIDENCE"
+    assert "WCM_UNKNOWN" in reasons
+    assert "JURISDICTION_NOT_ESTABLISHED" in reasons
+
+
+def test_manifest_policy_is_not_promoted_to_observed_state():
+    mapped = json.loads(
+        (ROOT / "fixtures" / "mapped" / "ddc-wcm-from-wcm-v0.15.synthetic.json").read_text()
+    )
+
+    assert mapped["jurisdiction"]["required"] == ["CA"]
+    assert mapped["jurisdiction"]["assessment"] == "NOT_ESTABLISHED"
+    assert "measurement" not in mapped["runtime"]
+    assert mapped["runtime"]["approved_measurements"]
+    assert mapped["physical"]["assessment"] == "UNKNOWN"
+    assert mapped["physical"]["required_hardening"] == "not-required"
