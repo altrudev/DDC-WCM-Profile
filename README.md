@@ -210,3 +210,30 @@ See [docs/EXTERNAL-TESTING.md](docs/EXTERNAL-TESTING.md) for clean-machine, CI, 
 The pinned WCM v0.15 → DDC-WCM v0.1 mapping is documented in [mappings/WCM-v0.15-to-DDC-WCM-v0.1.md](mappings/WCM-v0.15-to-DDC-WCM-v0.1.md).
 
 The mapper is deliberately conservative: policy assertions in a WCM manifest are not promoted into observed runtime, physical, or jurisdiction facts. A manifest-only mapping cannot produce ALLOW.
+
+## Standalone CLI
+
+The public profile can be installed directly from GitHub without cloning the repository:
+
+```bash
+python -m pip install "ddc-wcm-profile @ git+https://github.com/altrudev/DDC-WCM-Profile.git"
+```
+
+Then run:
+
+```bash
+ddc-wcm --version
+ddc-wcm check /path/to/evidence.json --json
+ddc-wcm map-wcm /path/to/wcm-manifest.json \
+  --manifest-hash sha256:<digest> \
+  --output /tmp/ddc-wcm-evidence.json
+```
+
+For reproducible testing, pin installation to a reviewed commit SHA:
+
+```bash
+python -m pip install \
+  "ddc-wcm-profile @ git+https://github.com/altrudev/DDC-WCM-Profile.git@<commit-sha>"
+```
+
+The CLI contains only the public profile schema, deterministic public decision rules, and conservative WCM mapping logic. It does not include the proprietary DDC assurance engine.
