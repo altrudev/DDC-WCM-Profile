@@ -1,5 +1,36 @@
 # Testing Outside the Repository
 
+## Install without cloning
+
+You can install the public CLI directly from GitHub:
+
+```bash
+python -m pip install "ddc-wcm-profile @ git+https://github.com/altrudev/DDC-WCM-Profile.git"
+```
+
+Then use it from any directory:
+
+```bash
+ddc-wcm check /path/to/evidence.json --json
+```
+
+For a reproducible assessment, pin the package to an exact reviewed commit SHA:
+
+```bash
+python -m pip install \
+  "ddc-wcm-profile @ git+https://github.com/altrudev/DDC-WCM-Profile.git@<commit-sha>"
+```
+
+The CLI can also map an upstream WCM manifest into a conservative DDC-WCM evidence skeleton:
+
+```bash
+ddc-wcm map-wcm /path/to/wcm-manifest.json \
+  --manifest-hash sha256:<digest> \
+  --output /tmp/ddc-wcm-evidence.json
+```
+
+Do not pass `--verification-result VALID` unless an authoritative WCM verifier actually produced that result.
+
 You can test evidence produced by another machine, application, WCM integration, or lab workflow without committing that evidence to this repository.
 
 ## External bundle check
