@@ -115,6 +115,9 @@ def map_manifest(
         },
     }
 
+    if not platform_integrity:
+        bundle["physical"].pop("platform_integrity_policy", None)
+
     if manifest.get("derived_from"):
         bundle["lineage"]["parent_weights_hash"] = manifest["derived_from"]
     if rights.get("base"):
