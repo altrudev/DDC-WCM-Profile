@@ -335,6 +335,30 @@
         },
         "required_hardening": {
           "type": "string"
+        },
+        "platform_integrity_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "alias_check_complete": {
+              "enum": [
+                "required",
+                "not-required"
+              ]
+            },
+            "ciphertext_hiding": {
+              "enum": [
+                "required",
+                "not-required"
+              ]
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
         }
       }
     },
