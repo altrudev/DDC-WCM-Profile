@@ -86,3 +86,45 @@ For the baseline above:
 - DDC-WCM consumes WCM verification as one evidence channel.
 - DDC-WCM adds independent contextual-coherence semantics without overriding WCM failure.
 - No official endorsement, certification, or upstream adoption is implied.
+
+
+## Compatibility review — current upstream main
+
+Reviewed upstream revision:
+
+`e06eeb08dc3262e86d00329ac5d46977f4e83849`
+
+Review date: 2026-09-12.
+
+### Schema comparison
+
+Relative to the original pinned baseline
+`718d6e308e7988d4d5af41fdf71ac44738fc49d5`:
+
+- no top-level manifest fields were removed;
+- no top-level required fields changed;
+- builder, release-terms, custody, and required-serving-image structures remained compatible;
+- serving-image status, physical-hardening, and trusted-time enumerations remained unchanged;
+- `release_policy.platform_integrity` was added as an optional field;
+- new definitions `PlatformIntegrity` and `PlatformIntegrityRequirement` were added.
+
+### DDC-WCM treatment
+
+The additive `platform_integrity` policy is explicitly mapped into
+`physical.platform_integrity_policy`.
+
+The mapping preserves the distinction between:
+
+- **required policy state** — what the manifest requires; and
+- **observed platform state** — what independent evidence proves.
+
+A manifest that requires alias checking or ciphertext hiding does not by itself
+cause `physical.assessment` to become `SUFFICIENT`.
+
+### Disposition
+
+**Compatible with additive mapping support.**
+
+This disposition covers the manifest-schema delta reviewed at the revision above.
+It is not a blanket claim that all future WCM changes are compatible, and it does
+not constitute upstream certification or endorsement.
