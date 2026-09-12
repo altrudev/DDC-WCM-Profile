@@ -22,8 +22,6 @@ ddc-wcm = "ddc_wcm.cli:main"
 [tool.hatch.build.targets.wheel]
 packages = ["src/ddc_wcm"]
 
-[tool.hatch.build.targets.wheel.force-include]
-"schema/ddc-wcm-evidence-v0.1.schema.json" = "ddc_wcm/data/ddc-wcm-evidence-v0.1.schema.json"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
