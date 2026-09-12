@@ -30,6 +30,7 @@ def map_manifest(
     rights = manifest.get("rights_holder") or {}
     provenance = manifest.get("provenance") or {}
     model_signing = provenance.get("model_signing") or {}
+    platform_integrity = release_policy.get("platform_integrity") or {}
 
     accepted_measurements = []
     for item in serving.get("accepted_measurements", []):
@@ -86,6 +87,11 @@ def map_manifest(
         "physical": {
             "assessment": "UNKNOWN",
             "required_hardening": release_policy.get("physical_hardening", "not-required"),
+            "platform_integrity_policy": {
+                "alias_check_complete": platform_integrity.get("alias_check_complete", "not-required"),
+                "ciphertext_hiding": platform_integrity.get("ciphertext_hiding", "not-required"),
+                "note": platform_integrity.get("note"),
+            } if platform_integrity else {},
         },
         "jurisdiction": {
             "required": jurisdiction_required,
