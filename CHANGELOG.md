@@ -8,6 +8,8 @@ The profile is pre-1.0. Semantic changes that alter interoperability behavior re
 
 ### Added
 
+- Current-upstream WCM platform-integrity policy mapping and fixtures.
+
 - Upstream WCM attribution and independence statement.
 - Architectural rationale for combining DDC with WCM.
 - Pinned upstream WCM compatibility baseline.
