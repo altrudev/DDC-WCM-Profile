@@ -88,3 +88,44 @@ def test_manifest_policy_is_not_promoted_to_observed_state():
     assert mapped["runtime"]["approved_measurements"]
     assert mapped["physical"]["assessment"] == "UNKNOWN"
     assert mapped["physical"]["required_hardening"] == "not-required"
+
+
+def test_current_upstream_platform_integrity_mapping():
+    mapper_path = ROOT / "conformance" / "map_wcm_manifest.py"
+    mapper_spec = importlib.util.spec_from_file_location("ddc_wcm_mapper_current", mapper_path)
+    mapper = importlib.util.module_from_spec(mapper_spec)
+    assert mapper_spec and mapper_spec.loader
+    mapper_spec.loader.exec_module(mapper)
+
+    manifest = json.loads(
+        (ROOT / "fixtures" / "upstream" / "wcm-current-platform-integrity.synthetic.json").read_text()
+    )
+    expected = json.loads(
+        (ROOT / "fixtures" / "mapped" / "ddc-wcm-current-platform-integrity.synthetic.json").read_text()
+    )
+
+    actual = mapper.map_manifest(
+        manifest,
+        "sha256:" + ("e" * 64),
+        verification_result="UNKNOWN",
+        upstream_revision="e06eeb08dc3262e86d00329ac5d46977f4e83849",
+        spec_version="v0.15",
+    )
+
+    assert actual == expected
+    assert actual["physical"]["assessment"] == "UNKNOWN"
+    assert actual["physical"]["platform_integrity_policy"]["alias_check_complete"] == "required"
+    assert actual["physical"]["platform_integrity_policy"]["ciphertext_hiding"] == "required"
+
+    decision, reasons = module.public_decision(actual)
+    assert decision == "INSUFFICIENT_EVIDENCE"
+    assert "WCM_UNKNOWN" in reasons
+    assert "JURISDICTION_NOT_ESTABLISHED" in reasons
+
+
+def test_platform_integrity_policy_is_not_observed_platform_state():
+    mapped = json.loads(
+        (ROOT / "fixtures" / "mapped" / "ddc-wcm-current-platform-integrity.synthetic.json").read_text()
+    )
+    assert mapped["physical"]["assessment"] == "UNKNOWN"
+    assert "platform_integrity_policy" in mapped["physical"]
