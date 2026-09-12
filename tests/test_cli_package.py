@@ -63,3 +63,21 @@ def test_cli_version(capsys):
     except SystemExit as exc:
         assert exc.code == 0
     assert capsys.readouterr().out.strip() == "ddc-wcm 0.1.0"
+
+
+def test_packaged_mapper_handles_platform_integrity():
+    manifest = json.loads(
+        (ROOT / "fixtures" / "upstream" / "wcm-current-platform-integrity.synthetic.json").read_text()
+    )
+    expected = json.loads(
+        (ROOT / "fixtures" / "mapped" / "ddc-wcm-current-platform-integrity.synthetic.json").read_text()
+    )
+    actual = map_manifest(
+        manifest,
+        "sha256:" + ("e" * 64),
+        upstream_revision="e06eeb08dc3262e86d00329ac5d46977f4e83849",
+        spec_version="v0.15",
+    )
+    assert actual == expected
+    assert actual["physical"]["platform_integrity_policy"]["alias_check_complete"] == "required"
+    assert actual["physical"]["assessment"] == "UNKNOWN"
