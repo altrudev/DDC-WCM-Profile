@@ -32,6 +32,7 @@ This mapping describes how public WCM manifest fields contribute to a DDC-WCM ev
 | `release_policy.required_serving_image.accepted_measurements[]` | runtime policy | Approved measurements, not observed measurement |
 | `release_policy.required_serving_image.signer` | supply-chain/runtime policy | Expected serving-image signer |
 | `release_policy.physical_hardening` | physical policy | Required hardening posture, not proof it exists |
+| `release_policy.platform_integrity` | `physical.platform_integrity_policy` | Required platform-integrity conditions; policy only, not observed hardware state |
 | `release_policy.trusted_time_source` | freshness/time policy | Required time-source posture |
 | `release_policy.attestation_revocation_check` | freshness/revocation policy | Required revocation behavior |
 | `release_policy.replay_protection` | WCM policy | Replay-protection requirement |
@@ -109,3 +110,20 @@ A mapper MUST leave these unknown unless supplied by an independent evidence sou
 A manifest-only mapping MUST NOT produce `ALLOW`.
 
 Until WCM verification and required independent runtime/context evidence are supplied, the correct state is non-ALLOW, normally `INSUFFICIENT_EVIDENCE`.
+
+
+## Current upstream additive extension
+
+Current upstream WCM `main` at revision
+`e06eeb08dc3262e86d00329ac5d46977f4e83849` adds the optional
+`release_policy.platform_integrity` object.
+
+DDC-WCM maps this into `physical.platform_integrity_policy`, preserving:
+
+- `alias_check_complete`
+- `ciphertext_hiding`
+- optional explanatory `note`
+
+This is deliberately treated as a **required policy posture**, not proof that the
+running platform currently satisfies those requirements. The observed
+`physical.assessment` remains `UNKNOWN` until independent evidence establishes state.
