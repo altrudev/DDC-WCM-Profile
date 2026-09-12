@@ -1,0 +1,87 @@
+{
+  "profile": "ddc-wcm/0.1",
+  "request": {
+    "operation": "wcm.key_release",
+    "request_id": "manifest-mapping-unbound"
+  },
+  "subject": {
+    "weights_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "manifest_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "authority": {
+    "status": "unknown",
+    "presented_authority": "did:example:builder",
+    "builder_signing_key": "did:key:builder-example",
+    "custodian": "Example Custodian",
+    "custodian_type": "customer-self-custody",
+    "permitted_environments": [
+      "confidential-vm"
+    ],
+    "derivative_policy": "fine-tune-only"
+  },
+  "wcm": {
+    "verification_result": "UNKNOWN",
+    "spec_version": "v0.15",
+    "manifest_version": "1.0-example",
+    "upstream_revision": "e06eeb08dc3262e86d00329ac5d46977f4e83849"
+  },
+  "executor": {},
+  "runtime": {
+    "approved_measurements": [
+      "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    ],
+    "required_serving_image_signer": "did:example:serving-signer",
+    "required_hw_platforms": [
+      "amd-sev-snp"
+    ],
+    "kbs_measurement": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "enclave_id": "example-enclave"
+  },
+  "freshness": {
+    "assessment": "UNKNOWN",
+    "trusted_time_source": "lease-with-op-count-hybrid",
+    "attestation_cadence": "PT15M",
+    "kbs_attestation_cadence": "PT6H",
+    "attestation_revocation_check": "live-per-release"
+  },
+  "lineage": {
+    "assessment": "UNKNOWN",
+    "derivative_policy": "fine-tune-only",
+    "rights_holder_base": "Example Builder",
+    "rights_holder_derivative": null
+  },
+  "physical": {
+    "assessment": "UNKNOWN",
+    "required_hardening": "not-required",
+    "platform_integrity_policy": {
+      "alias_check_complete": "required",
+      "ciphertext_hiding": "required",
+      "note": "Current upstream additive platform-integrity policy fixture"
+    }
+  },
+  "jurisdiction": {
+    "required": [
+      "CA"
+    ],
+    "assessment": "NOT_ESTABLISHED",
+    "evidence": []
+  },
+  "supply_chain": {
+    "integrity": "UNKNOWN",
+    "acceptability": "UNKNOWN",
+    "expected_serving_image_signer": "did:example:serving-signer",
+    "expected_kbs_signer": "did:example:kbs-signer",
+    "model_signing_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "frequency": {
+    "assessment": "UNKNOWN"
+  },
+  "contradictions": [],
+  "uncertainty": {
+    "assessment": "HIGH",
+    "notes": [
+      "Manifest mapping contains policy assertions, not observed runtime state.",
+      "Independent WCM verification and contextual evidence are still required."
+    ]
+  }
+}
