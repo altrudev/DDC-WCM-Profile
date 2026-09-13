@@ -24,11 +24,23 @@ def sha256_bytes(data: bytes) -> str:
     return "sha256:" + hashlib.sha256(data).hexdigest()
 
 
+def _detect_version(exe: str) -> str:
+    first = Path(exe).read_text(errors="ignore").splitlines()[0] if Path(exe).is_file() else ""
+    if not first.startswith("#!"):
+        raise VerificationAdapterError("cannot determine WCM verifier interpreter")
+    interpreter = first[2:].strip().split()[0]
+    proc = subprocess.run(
+        [interpreter, "-c", "import importlib.metadata as m; print(m.version('weight-custody-manifest'))"],
+        capture_output=True, text=True, timeout=15,
+    )
+    if proc.returncode != 0 or not proc.stdout.strip():
+        raise VerificationAdapterError("cannot determine installed WCM verifier version")
+    return proc.stdout.strip()
+
 def run_wcm_verify(
     manifest: Path,
     key_files: list[Path],
     wcm_executable: str = "wcm",
-    verifier_version: str | None = None,
 ) -> tuple[dict, dict]:
     if not key_files:
         raise VerificationAdapterError("at least one trusted WCM key file is required")
@@ -64,7 +76,7 @@ def run_wcm_verify(
     evidence = {
         "source": "executed-wcm-cli",
         "verifier_name": "weight-custody-manifest",
-        "verifier_version": verifier_version or "unreported",
+        "verifier_version": _detect_version(exe),
         "verifier_executable": exe,
         "verifier_executable_hash": sha256_file(Path(exe)),
         "manifest_hash": sha256_file(manifest),
