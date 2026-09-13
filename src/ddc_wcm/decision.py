@@ -1,20 +1,26 @@
 from __future__ import annotations
 
-BLOCKING_CODES={"WCM_INVALID","MANIFEST_IDENTITY_MISMATCH","WEIGHTS_IDENTITY_MISMATCH","EXECUTOR_IDENTITY_MISMATCH","AUTHORITY_SCOPE_MISMATCH","AUTHORITY_EXPIRED","ATTESTATION_MISSING","CHALLENGE_REPLAY","REVOCATION_KNOWN","RUNTIME_STATE_CONTRADICTION","LINEAGE_CONTRADICTION","SUPPLY_CHAIN_POLICY_FAILURE","EXECUTOR_LINEAGE_CONTRADICTION","CRITICAL_CONTRADICTION","EXECUTION_DIVERGENCE"}
+BLOCKING_CODES={"WCM_INVALID","WCM_VERIFIER_RESULT_MISMATCH","MANIFEST_IDENTITY_MISMATCH","WEIGHTS_IDENTITY_MISMATCH","EXECUTOR_IDENTITY_MISMATCH","AUTHORITY_SCOPE_MISMATCH","AUTHORITY_EXPIRED","ATTESTATION_MISSING","CHALLENGE_REPLAY","REVOCATION_KNOWN","RUNTIME_STATE_CONTRADICTION","LINEAGE_CONTRADICTION","SUPPLY_CHAIN_POLICY_FAILURE","EXECUTOR_LINEAGE_CONTRADICTION","CRITICAL_CONTRADICTION","EXECUTION_DIVERGENCE"}
 ESCALATION_CODES={"JURISDICTION_CONTRADICTION","FREQUENCY_ANOMALY"}
-EVIDENCE_CODES={"WCM_UNKNOWN","ATTESTATION_STALE","JURISDICTION_NOT_ESTABLISHED","PHYSICAL_ASSURANCE_INSUFFICIENT","INSUFFICIENT_EVIDENCE","PROFILE_INCOMPATIBLE","ASSURANCE_ENGINE_ERROR"}
+EVIDENCE_CODES={"WCM_UNKNOWN","WCM_VERIFIER_EVIDENCE_MISSING","ATTESTATION_STALE","JURISDICTION_NOT_ESTABLISHED","PHYSICAL_ASSURANCE_INSUFFICIENT","INSUFFICIENT_EVIDENCE","PROFILE_INCOMPATIBLE","ASSURANCE_ENGINE_ERROR"}
 
-def public_decision(bundle: dict) -> tuple[str,list[str]]:
+def public_decision(bundle:dict)->tuple[str,list[str]]:
     codes=[]
-    verification=bundle.get("wcm",{}).get("verification_result")
+    w=bundle.get("wcm",{}); verification=w.get("verification_result"); ve=w.get("verification_evidence")
     if verification=="INVALID": codes.append("WCM_INVALID")
     elif verification=="UNKNOWN": codes.append("WCM_UNKNOWN")
+    elif verification=="VALID":
+        if not isinstance(ve,dict):
+            codes.append("WCM_VERIFIER_EVIDENCE_MISSING")
+        else:
+            if ve.get("manifest_hash")!=bundle.get("subject",{}).get("manifest_hash"):
+                codes.append("MANIFEST_IDENTITY_MISMATCH")
+            if ve.get("result")!="VALID":
+                codes.append("WCM_VERIFIER_RESULT_MISMATCH")
     a=bundle.get("authority",{})
-    if a.get("status")=="contradictory" and a.get("pinned_authority") and a.get("presented_authority") and a["pinned_authority"]!=a["presented_authority"]:
-        codes.append("AUTHORITY_SCOPE_MISMATCH")
+    if a.get("status")=="contradictory" and a.get("pinned_authority") and a.get("presented_authority") and a["pinned_authority"]!=a["presented_authority"]: codes.append("AUTHORITY_SCOPE_MISMATCH")
     e=bundle.get("executor",{})
-    if e.get("independently_pinned_executor_id") and e.get("executor_id") and e["independently_pinned_executor_id"]!=e["executor_id"]:
-        codes.append("EXECUTOR_LINEAGE_CONTRADICTION")
+    if e.get("independently_pinned_executor_id") and e.get("executor_id") and e["independently_pinned_executor_id"]!=e["executor_id"]: codes.append("EXECUTOR_LINEAGE_CONTRADICTION")
     if bundle.get("freshness",{}).get("assessment") in {"STALE","MIXED"}: codes.append("ATTESTATION_STALE")
     if bundle.get("lineage",{}).get("assessment")=="CONTRADICTORY": codes.append("LINEAGE_CONTRADICTION")
     j=bundle.get("jurisdiction",{}).get("assessment")
