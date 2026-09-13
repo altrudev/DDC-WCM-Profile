@@ -207,7 +207,7 @@ See [docs/EXTERNAL-TESTING.md](docs/EXTERNAL-TESTING.md) for clean-machine, CI, 
 
 ## WCM field mapping
 
-The current verifier-bound mapping is DDC-WCM v0.2. The historical v0.1 mapping remains in the repository for traceability.
+The current verifier-bound mapping is documented in [mappings/WCM-v0.15-to-DDC-WCM-v0.2.md](mappings/WCM-v0.15-to-DDC-WCM-v0.2.md). The historical v0.1 mapping remains in the repository for traceability.
 
 The mapper is deliberately conservative: policy assertions in a WCM manifest are not promoted into observed runtime, physical, or jurisdiction facts. A manifest-only mapping cannot produce ALLOW.
 
