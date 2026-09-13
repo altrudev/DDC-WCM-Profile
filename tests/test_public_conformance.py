@@ -147,3 +147,37 @@ def test_verifier_manifest_mismatch_blocks():
     decision, reasons = module.public_decision(bundle)
     assert decision == "BLOCK"
     assert "MANIFEST_IDENTITY_MISMATCH" in reasons
+
+
+def test_all_vectors_validate_against_v02_schema():
+    import jsonschema
+
+    schema = json.loads(
+        (ROOT / "schema" / "ddc-wcm-evidence-v0.2.schema.json").read_text()
+    )
+    validator_cls = jsonschema.validators.validator_for(schema)
+    validator_cls.check_schema(schema)
+    validator = validator_cls(schema)
+
+    failures = []
+    for path in vector_paths():
+        vector = json.loads(path.read_text())
+        errors = sorted(
+            validator.iter_errors(vector["input"]),
+            key=lambda error: list(error.path),
+        )
+        if errors:
+            failures.append(
+                (
+                    path.name,
+                    [
+                        (
+                            ".".join(str(x) for x in error.path) or "<root>",
+                            error.message,
+                        )
+                        for error in errors
+                    ],
+                )
+            )
+
+    assert not failures, failures
