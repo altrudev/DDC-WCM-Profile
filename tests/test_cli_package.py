@@ -12,6 +12,7 @@ if str(SRC) not in sys.path:
 from ddc_wcm.cli import _schema, check_bundle, main
 from ddc_wcm.decision import public_decision
 from ddc_wcm.mapping import map_manifest
+from ddc_wcm.verifier import VerificationAdapterError, run_wcm_verify, sha256_file
 
 
 def test_packaged_schema_matches_normative_schema():
@@ -107,3 +108,69 @@ def test_mapper_rejects_verifier_evidence_for_other_manifest():
         assert "different manifest digest" in str(exc)
     else:
         raise AssertionError("mismatched verifier evidence was accepted")
+
+
+def test_executed_wcm_verifier_adapter_binds_inputs(tmp_path, monkeypatch):
+    import subprocess as _subprocess
+    import ddc_wcm.verifier as verifier
+
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"manifest":"fixture"}\n')
+    key = tmp_path / "builder.pub"
+    key.write_text("trusted-public-key\n")
+    exe = tmp_path / "wcm"
+    exe.write_text("#!/usr/bin/python3\n")
+
+    monkeypatch.setattr(verifier.shutil, "which", lambda name: str(exe))
+
+    calls = []
+
+    def fake_run(argv, **kwargs):
+        calls.append(argv)
+        if argv[0] == str(exe):
+            report = {
+                "ok": True,
+                "signatures": [],
+                "missing_roles": [],
+                "errors": [],
+            }
+            return _subprocess.CompletedProcess(argv, 0, json.dumps(report).encode(), b"")
+        return _subprocess.CompletedProcess(argv, 0, "0.28.1\n", "")
+
+    monkeypatch.setattr(verifier.subprocess, "run", fake_run)
+    evidence, report = run_wcm_verify(manifest, [key])
+
+    assert report["ok"] is True
+    assert evidence["result"] == "VALID"
+    assert evidence["manifest_hash"] == sha256_file(manifest)
+    assert evidence["trusted_key_hashes"] == [sha256_file(key)]
+    assert evidence["verifier_version"] == "0.28.1"
+    assert evidence["exit_code"] == 0
+    assert calls[0][0] == str(exe)
+
+
+def test_executed_wcm_verifier_rejects_report_exit_contradiction(tmp_path, monkeypatch):
+    import subprocess as _subprocess
+    import ddc_wcm.verifier as verifier
+
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text('{"manifest":"fixture"}\n')
+    key = tmp_path / "builder.pub"
+    key.write_text("trusted-public-key\n")
+    exe = tmp_path / "wcm"
+    exe.write_text("#!/usr/bin/python3\n")
+    monkeypatch.setattr(verifier.shutil, "which", lambda name: str(exe))
+
+    def fake_run(argv, **kwargs):
+        if argv[0] == str(exe):
+            report = {"ok": True, "signatures": [], "missing_roles": [], "errors": []}
+            return _subprocess.CompletedProcess(argv, 1, json.dumps(report).encode(), b"")
+        return _subprocess.CompletedProcess(argv, 0, "0.28.1\n", "")
+
+    monkeypatch.setattr(verifier.subprocess, "run", fake_run)
+    try:
+        run_wcm_verify(manifest, [key])
+    except VerificationAdapterError as exc:
+        assert "contradiction" in str(exc)
+    else:
+        raise AssertionError("report/exit contradiction was accepted")
