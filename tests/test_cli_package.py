@@ -15,7 +15,7 @@ from ddc_wcm.mapping import map_manifest
 
 
 def test_packaged_schema_matches_normative_schema():
-    normative = json.loads((ROOT / "schema" / "ddc-wcm-evidence-v0.1.schema.json").read_text())
+    normative = json.loads((ROOT / "schema" / "ddc-wcm-evidence-v0.2.schema.json").read_text())
     assert _schema() == normative
 
 
@@ -50,7 +50,7 @@ def test_packaged_mapper_matches_mapping_fixture():
     expected = json.loads(
         (ROOT / "fixtures" / "mapped" / "ddc-wcm-from-wcm-v0.15.synthetic.json").read_text()
     )
-    actual = map_manifest(manifest, "sha256:" + ("e" * 64))
+    actual = map_manifest(manifest, "sha256:" + ("e" * 64), verification_evidence=None)
     assert actual == expected
     decision, reasons = public_decision(actual)
     assert decision == "INSUFFICIENT_EVIDENCE"
@@ -62,7 +62,7 @@ def test_cli_version(capsys):
         main(["--version"])
     except SystemExit as exc:
         assert exc.code == 0
-    assert capsys.readouterr().out.strip() == "ddc-wcm 0.1.0"
+    assert capsys.readouterr().out.strip() == "ddc-wcm 0.2.0"
 
 
 def test_packaged_mapper_handles_platform_integrity():
@@ -77,7 +77,33 @@ def test_packaged_mapper_handles_platform_integrity():
         "sha256:" + ("e" * 64),
         upstream_revision="e06eeb08dc3262e86d00329ac5d46977f4e83849",
         spec_version="v0.15",
+        verification_evidence=None,
     )
     assert actual == expected
     assert actual["physical"]["platform_integrity_policy"]["alias_check_complete"] == "required"
     assert actual["physical"]["assessment"] == "UNKNOWN"
+
+
+def test_mapper_rejects_verifier_evidence_for_other_manifest():
+    manifest = json.loads(
+        (ROOT / "fixtures" / "upstream" / "wcm-v0.15-manifest.synthetic.json").read_text()
+    )
+    evidence = {
+        "source": "executed-wcm-cli",
+        "verifier_name": "weight-custody-manifest",
+        "verifier_version": "0.28.1",
+        "verifier_executable": "/usr/bin/wcm",
+        "verifier_executable_hash": "sha256:" + ("f" * 64),
+        "manifest_hash": "sha256:" + ("d" * 64),
+        "report_hash": "sha256:" + ("b" * 64),
+        "trusted_key_hashes": ["sha256:" + ("c" * 64)],
+        "verified_at": "2026-09-13T00:00:00Z",
+        "result": "VALID",
+        "exit_code": 0,
+    }
+    try:
+        map_manifest(manifest, "sha256:" + ("e" * 64), verification_evidence=evidence)
+    except ValueError as exc:
+        assert "different manifest digest" in str(exc)
+    else:
+        raise AssertionError("mismatched verifier evidence was accepted")
