@@ -32,7 +32,7 @@ def check_bundle(path:Path,json_output:bool=False)->int:
 
 def verify_wcm_file(args)->int:
     try:
-        evidence,report=run_wcm_verify(args.manifest,args.key_file,args.wcm_executable,args.verifier_version)
+        evidence,report=run_wcm_verify(args.manifest,args.key_file,args.wcm_executable)
     except (VerificationAdapterError,OSError,subprocess.SubprocessError) as exc:
         print(f"ERROR: {exc}",file=sys.stderr); return 2
     doc={"schema":"ddc-wcm-verifier-evidence/1","evidence":evidence,"upstream_report":report}
@@ -47,21 +47,25 @@ def map_file(args)->int:
         manifest_hash=sha256_file(args.manifest.resolve(strict=True))
     except Exception as exc:
         print(f"ERROR: cannot read manifest: {exc}",file=sys.stderr); return 2
-    verification_evidence=None
-    if args.verification_evidence:
-        try:
-            receipt=json.loads(args.verification_evidence.read_text())
-            verification_evidence=receipt["evidence"]
-        except Exception as exc:
-            print(f"ERROR: invalid verification evidence: {exc}",file=sys.stderr); return 2
-    try:
-        bundle=map_manifest(manifest,manifest_hash,verification_evidence=verification_evidence)
-    except ValueError as exc:
-        print(f"ERROR: {exc}",file=sys.stderr); return 2
+    bundle=map_manifest(manifest,manifest_hash,verification_evidence=None)
     encoded=json.dumps(bundle,indent=2,sort_keys=True)+"\n"
     if args.output: args.output.write_text(encoded)
     else: print(encoded,end="")
     return 0
+
+def verify_and_map_file(args)->int:
+    try:
+        manifest=json.loads(args.manifest.read_text())
+        evidence,report=run_wcm_verify(args.manifest,args.key_file,args.wcm_executable)
+        bundle=map_manifest(manifest,evidence["manifest_hash"],verification_evidence=evidence)
+    except (VerificationAdapterError,OSError,subprocess.SubprocessError,ValueError) as exc:
+        print(f"ERROR: {exc}",file=sys.stderr); return 2
+    if args.receipt_output:
+        args.receipt_output.write_text(json.dumps({"schema":"ddc-wcm-verifier-evidence/1","evidence":evidence,"upstream_report":report},indent=2,sort_keys=True)+"\n")
+    encoded=json.dumps(bundle,indent=2,sort_keys=True)+"\n"
+    if args.output: args.output.write_text(encoded)
+    else: print(encoded,end="")
+    return 0 if evidence["result"]=="VALID" else 4
 
 def main(argv=None)->int:
     p=argparse.ArgumentParser(prog="ddc-wcm",description="Public DDC-WCM interoperability CLI")
@@ -70,8 +74,8 @@ def main(argv=None)->int:
     c=sub.add_parser("check"); c.add_argument("bundle",type=Path); c.add_argument("--json",action="store_true")
     v=sub.add_parser("verify-wcm",help="Execute upstream WCM verification and emit bound verifier evidence")
     v.add_argument("manifest",type=Path); v.add_argument("--key-file",type=Path,action="append",required=True)
-    v.add_argument("--wcm-executable",default="wcm"); v.add_argument("--verifier-version",default=None); v.add_argument("--output",type=Path)
-    m=sub.add_parser("map-wcm"); m.add_argument("manifest",type=Path); m.add_argument("--verification-evidence",type=Path); m.add_argument("--output",type=Path)
+    v.add_argument("--wcm-executable",default="wcm"); v.add_argument("--output",type=Path)
+    m=sub.add_parser("map-wcm"); m.add_argument("manifest",type=Path); m.add_argument("--output",type=Path)\n    vm=sub.add_parser("verify-and-map",help="Execute upstream WCM verification and immediately map bound evidence")\n    vm.add_argument("manifest",type=Path); vm.add_argument("--key-file",type=Path,action="append",required=True); vm.add_argument("--wcm-executable",default="wcm"); vm.add_argument("--receipt-output",type=Path); vm.add_argument("--output",type=Path)
     args=p.parse_args(argv)
     if args.command=="check": return check_bundle(args.bundle,args.json)
     if args.command=="verify-wcm": return verify_wcm_file(args)
