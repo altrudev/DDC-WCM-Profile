@@ -1,12 +1,12 @@
 # Versioning and Compatibility
 
-Status: Draft v0.1
+Status: Draft v0.2
 
 ## Profile identifier
 
 The current profile identifier is:
 
-`ddc-wcm/0.1`
+`ddc-wcm/0.2`
 
 The profile is pre-1.0 and may change incompatibly while the evidence contract, conformance corpus, and upstream WCM mappings are being validated.
 
@@ -80,3 +80,14 @@ A future v1.0 should require:
 4. positive and negative conformance vectors;
 5. upstream-version compatibility statement;
 6. independent implementation or interoperability review.
+
+
+## Revision history
+
+### ddc-wcm/0.1
+
+Initial public evidence and decision contract. WCM validity could be represented as a normalized scalar result.
+
+### ddc-wcm/0.2
+
+Verifier-bound WCM validity. A non-UNKNOWN WCM result requires explicit verifier evidence. The reference CLI no longer accepts a manual validity flag. It either maps a manifest conservatively as UNKNOWN or executes the upstream WCM verifier and immediately binds that result to the mapped evidence.
