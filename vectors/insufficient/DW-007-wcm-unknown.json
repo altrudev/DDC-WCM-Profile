@@ -6,14 +6,14 @@
     "WCM_UNKNOWN"
   ],
   "input": {
-    "profile": "ddc-wcm/0.1",
+    "profile": "ddc-wcm/0.2",
     "request": {
       "operation": "wcm.key_release",
       "request_id": "dw-007"
     },
     "subject": {
-      "weights_hash": "sha256:weights-A",
-      "manifest_hash": "sha256:manifest-A"
+      "weights_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "manifest_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     },
     "authority": {
       "status": "consistent"
