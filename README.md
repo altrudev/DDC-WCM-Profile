@@ -2,7 +2,7 @@
 
 **Open interoperability profile for evaluating whether Weight Custody Manifest (WCM) evidence and independently observed execution evidence form a sufficiently coherent basis for a consequential model-custody transition.**
 
-> Status: **Draft v0.1 / experimental**
+> Status: **Draft v0.2 / experimental**
 >
 > This project does **not** implement or disclose the proprietary DDC reasoning engine. It defines an open evidence contract, decision semantics, interoperability rules, and adversarial test surface.
 
@@ -78,7 +78,7 @@ A provider may expose public reason codes while keeping proprietary inference de
 
 ## Evidence dimensions
 
-Draft v0.1 standardizes public evidence contracts for:
+Draft v0.2 standardizes public evidence contracts for:
 
 1. artifact identity;
 2. authority;
@@ -207,7 +207,7 @@ See [docs/EXTERNAL-TESTING.md](docs/EXTERNAL-TESTING.md) for clean-machine, CI, 
 
 ## WCM field mapping
 
-The pinned WCM v0.15 → DDC-WCM v0.1 mapping is documented in [mappings/WCM-v0.15-to-DDC-WCM-v0.1.md](mappings/WCM-v0.15-to-DDC-WCM-v0.1.md).
+The current verifier-bound mapping is documented in [mappings/WCM-v0.15-to-DDC-WCM-v0.2.md](mappings/WCM-v0.15-to-DDC-WCM-v0.2.md). The historical v0.1 mapping remains in the repository for traceability.
 
 The mapper is deliberately conservative: policy assertions in a WCM manifest are not promoted into observed runtime, physical, or jurisdiction facts. A manifest-only mapping cannot produce ALLOW.
 
@@ -224,9 +224,18 @@ Then run:
 ```bash
 ddc-wcm --version
 ddc-wcm check /path/to/evidence.json --json
+
+# Conservative manifest-only mapping: WCM remains UNKNOWN.
 ddc-wcm map-wcm /path/to/wcm-manifest.json \
-  --manifest-hash sha256:<digest> \
   --output /tmp/ddc-wcm-evidence.json
+
+# Stronger reference path: execute upstream WCM verification with trusted keys,
+# then bind that exact result directly into the mapped evidence.
+ddc-wcm verify-and-map /path/to/wcm-manifest.json \
+  --key-file /path/to/builder.pub \
+  --key-file /path/to/custodian.pub \
+  --output /tmp/ddc-wcm-evidence.json \
+  --receipt-output /tmp/wcm-verifier-evidence.json
 ```
 
 For reproducible testing, pin installation to a reviewed commit SHA:
@@ -237,3 +246,10 @@ python -m pip install \
 ```
 
 The CLI contains only the public profile schema, deterministic public decision rules, and conservative WCM mapping logic. It does not include the proprietary DDC assurance engine.
+
+
+### v0.2 verifier-bound validity
+
+DDC-WCM v0.2 removes the reference CLI's manual `--verification-result VALID` path. Non-UNKNOWN WCM state must carry evidence bound to the exact manifest digest. The recommended reference workflow is `verify-and-map`, which executes the upstream WCM verifier directly.
+
+A serialized verifier-evidence object is provenance. For portable high-assurance use, authenticate its producer (for example with a governed executor or signed receipt) or re-run WCM verification before relying on it.

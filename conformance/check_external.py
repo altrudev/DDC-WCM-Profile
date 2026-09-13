@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN_PATH = ROOT / "conformance" / "run.py"
-SCHEMA_PATH = ROOT / "schema" / "ddc-wcm-evidence-v0.1.schema.json"
+SCHEMA_PATH = ROOT / "schema" / "ddc-wcm-evidence-v0.2.schema.json"
 
 
 def load_decision_module():

@@ -1,6 +1,6 @@
 # Reason Codes
 
-Status: Draft v0.1
+Status: Draft v0.2
 
 Reason codes are public interoperability outputs. They explain *what class of condition affected the decision* without disclosing proprietary DDC inference mechanics.
 
@@ -18,6 +18,7 @@ A conforming implementation MUST apply these rules:
 ## Blocking reason codes
 
 - `WCM_INVALID`
+- `WCM_VERIFIER_RESULT_MISMATCH`
 - `MANIFEST_IDENTITY_MISMATCH`
 - `WEIGHTS_IDENTITY_MISMATCH`
 - `EXECUTOR_IDENTITY_MISMATCH`
@@ -36,6 +37,7 @@ A conforming implementation MUST apply these rules:
 ## Non-ALLOW evidence/compatibility codes
 
 - `WCM_UNKNOWN`
+- `WCM_VERIFIER_EVIDENCE_MISSING`
 - `ATTESTATION_STALE`
 - `JURISDICTION_NOT_ESTABLISHED`
 - `PHYSICAL_ASSURANCE_INSUFFICIENT`

@@ -1,4 +1,4 @@
-# DDC–WCM Interoperability Profile v0.1
+# DDC–WCM Interoperability Profile v0.2
 
 Status: Draft / Experimental
 
@@ -16,7 +16,7 @@ The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, MA
 
 ## 3. Fundamental rules
 
-1. WCM verification remains authoritative for WCM-specific validity.
+1. WCM verification remains authoritative for WCM-specific validity.\n2. A `VALID` or `INVALID` WCM result MUST carry verifier evidence bound to the exact manifest digest.\n3. The reference CLI MUST NOT accept a manually asserted WCM validity result.
 2. A WCM failure MUST NOT be overridden by this profile.
 3. Missing mandatory evidence MUST NOT silently become ALLOW.
 4. Parsing or normalization failures MUST NOT silently discard security-relevant fields.
@@ -80,7 +80,7 @@ Public contract fields may include:
 
 ### 5.5 WCM attestation
 A normalized WCM result may include:
-- verification outcome;
+- verification outcome;\n- verifier identity and installed version;\n- verifier executable digest;\n- exact manifest digest verified;\n- trusted-key digests;\n- verifier report digest and exit status;
 - WCM/spec version;
 - challenge or nonce digest;
 - CPU evidence digest;
@@ -156,7 +156,7 @@ The algorithm used to derive such observations is implementation-private.
 At minimum:
 
 - WCM_INVALID -> BLOCK
-- WCM_UNKNOWN -> non-ALLOW
+- WCM_UNKNOWN -> non-ALLOW\n- WCM_VERIFIER_EVIDENCE_MISSING -> non-ALLOW\n- verifier result/manifest binding mismatch -> BLOCK
 - manifest identity mismatch -> BLOCK
 - weights identity mismatch -> BLOCK
 - executor identity mismatch -> BLOCK
@@ -232,6 +232,15 @@ The receipt should preserve:
 
 Profile identifier:
 
-`ddc-wcm/0.1`
+`ddc-wcm/0.2`
 
 Pre-1.0 revisions may change. Implementations MUST reject unsupported mandatory semantics rather than guessing.
+
+
+## 11. Verifier-evidence trust boundary
+
+The v0.2 verifier-evidence object records what verifier was executed, what exact manifest bytes were verified, what trusted key files were supplied, the verifier report digest, and the resulting WCM validity state.
+
+That object is provenance, not by itself a globally trusted attestation. Portable evidence SHOULD be authenticated by an independently trusted producer signature, governed executor receipt, or equivalent transport binding. Otherwise a consumer SHOULD re-execute WCM verification from the manifest and trusted keys before treating the evidence as authoritative.
+
+The reference CLI therefore provides `verify-and-map`, which executes upstream WCM verification and mapping in one local process. Plain `map-wcm` never promotes WCM validity and always emits `UNKNOWN`.

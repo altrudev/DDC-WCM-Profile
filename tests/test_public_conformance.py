@@ -18,9 +18,9 @@ def vector_paths():
 
 
 def test_schema_is_valid_json_and_declares_profile():
-    schema = json.loads((ROOT / "schema" / "ddc-wcm-evidence-v0.1.schema.json").read_text())
+    schema = json.loads((ROOT / "schema" / "ddc-wcm-evidence-v0.2.schema.json").read_text())
     assert schema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
-    assert schema["properties"]["profile"]["const"] == "ddc-wcm/0.1"
+    assert schema["properties"]["profile"]["const"] == "ddc-wcm/0.2"
     assert schema["additionalProperties"] is False
 
 
@@ -66,7 +66,7 @@ def test_wcm_manifest_mapping_is_conservative():
     actual = mapper.map_manifest(
         manifest,
         "sha256:" + ("e" * 64),
-        verification_result="UNKNOWN",
+        verification_evidence=None,
     )
 
     assert actual == expected
@@ -107,7 +107,7 @@ def test_current_upstream_platform_integrity_mapping():
     actual = mapper.map_manifest(
         manifest,
         "sha256:" + ("e" * 64),
-        verification_result="UNKNOWN",
+        verification_evidence=None,
         upstream_revision="e06eeb08dc3262e86d00329ac5d46977f4e83849",
         spec_version="v0.15",
     )
@@ -129,3 +129,55 @@ def test_platform_integrity_policy_is_not_observed_platform_state():
     )
     assert mapped["physical"]["assessment"] == "UNKNOWN"
     assert "platform_integrity_policy" in mapped["physical"]
+
+
+def test_valid_requires_verifier_binding():
+    vector = json.loads((ROOT / "vectors" / "valid" / "DW-000-valid-baseline.json").read_text())
+    bundle = json.loads(json.dumps(vector["input"]))
+    bundle["wcm"].pop("verification_evidence", None)
+    decision, reasons = module.public_decision(bundle)
+    assert decision == "INSUFFICIENT_EVIDENCE"
+    assert "WCM_VERIFIER_EVIDENCE_MISSING" in reasons
+
+
+def test_verifier_manifest_mismatch_blocks():
+    vector = json.loads((ROOT / "vectors" / "valid" / "DW-000-valid-baseline.json").read_text())
+    bundle = json.loads(json.dumps(vector["input"]))
+    bundle["wcm"]["verification_evidence"]["manifest_hash"] = "sha256:" + ("d" * 64)
+    decision, reasons = module.public_decision(bundle)
+    assert decision == "BLOCK"
+    assert "MANIFEST_IDENTITY_MISMATCH" in reasons
+
+
+def test_all_vectors_validate_against_v02_schema():
+    import jsonschema
+
+    schema = json.loads(
+        (ROOT / "schema" / "ddc-wcm-evidence-v0.2.schema.json").read_text()
+    )
+    validator_cls = jsonschema.validators.validator_for(schema)
+    validator_cls.check_schema(schema)
+    validator = validator_cls(schema)
+
+    failures = []
+    for path in vector_paths():
+        vector = json.loads(path.read_text())
+        errors = sorted(
+            validator.iter_errors(vector["input"]),
+            key=lambda error: list(error.path),
+        )
+        if errors:
+            failures.append(
+                (
+                    path.name,
+                    [
+                        (
+                            ".".join(str(x) for x in error.path) or "<root>",
+                            error.message,
+                        )
+                        for error in errors
+                    ],
+                )
+            )
+
+    assert not failures, failures

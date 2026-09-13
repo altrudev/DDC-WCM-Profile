@@ -6,20 +6,37 @@
     "CRITICAL_CONTRADICTION"
   ],
   "input": {
-    "profile": "ddc-wcm/0.1",
+    "profile": "ddc-wcm/0.2",
     "request": {
       "operation": "wcm.key_release",
       "request_id": "dw-010"
     },
     "subject": {
-      "weights_hash": "sha256:weights-A",
-      "manifest_hash": "sha256:manifest-A"
+      "weights_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "manifest_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
     },
     "authority": {
       "status": "consistent"
     },
     "wcm": {
-      "verification_result": "VALID"
+      "verification_result": "VALID",
+      "verification_evidence": {
+        "source": "executed-wcm-cli",
+        "verifier_name": "weight-custody-manifest",
+        "verifier_version": "0.28.1",
+        "verifier_executable": "/usr/bin/wcm",
+        "verifier_executable_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "manifest_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "report_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "trusted_key_hashes": [
+          "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        ],
+        "verified_at": "2026-09-13T00:00:00Z",
+        "result": "VALID",
+        "exit_code": 0
+      },
+      "verified_at": "2026-09-13T00:00:00Z",
+      "evidence_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
     },
     "executor": {
       "executor_id": "exec-1"

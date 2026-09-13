@@ -25,7 +25,6 @@ The CLI can also map an upstream WCM manifest into a conservative DDC-WCM eviden
 
 ```bash
 ddc-wcm map-wcm /path/to/wcm-manifest.json \
-  --manifest-hash sha256:<digest> \
   --output /tmp/ddc-wcm-evidence.json
 ```
 
@@ -106,3 +105,34 @@ For stronger evidence, run the same pinned repository revision through a separat
 - signature/receipt if available.
 
 That produces an independently reproducible profile-conformance result.
+
+
+## Verifier-bound v0.2 workflow
+
+Manifest-only mapping is deliberately non-authoritative:
+
+```bash
+ddc-wcm map-wcm manifest.json --output evidence.json
+ddc-wcm check evidence.json --json
+```
+
+That evidence remains `WCM_UNKNOWN`.
+
+To bind actual WCM verification, install the upstream WCM reference SDK/CLI in
+the environment and run:
+
+```bash
+ddc-wcm verify-and-map manifest.json \
+  --key-file builder.pub \
+  --key-file custodian.pub \
+  --output evidence.json \
+  --receipt-output verifier-evidence.json
+```
+
+The command executes upstream `wcm verify` itself. It does not accept an
+operator-entered validity result.
+
+For portable high-assurance evidence, authenticate the producer of the
+serialized verifier evidence (for example through a signed governed-executor
+result) or independently re-run WCM verification. A JSON provenance record by
+itself is not a global trust anchor.
