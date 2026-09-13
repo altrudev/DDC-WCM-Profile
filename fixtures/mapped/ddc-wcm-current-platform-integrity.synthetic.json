@@ -1,5 +1,5 @@
 {
-  "profile": "ddc-wcm/0.1",
+  "profile": "ddc-wcm/0.2",
   "request": {
     "operation": "wcm.key_release",
     "request_id": "manifest-mapping-unbound"
