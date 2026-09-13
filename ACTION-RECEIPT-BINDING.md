@@ -1,6 +1,6 @@
 # DDC Action Receipt Binding
 
-Status: Draft v0.1
+Status: Draft v0.2
 
 ## Purpose
 
@@ -16,6 +16,9 @@ The receipt SHOULD preserve at least:
 - authority reference;
 - model/weights identity;
 - WCM manifest identity;
+- WCM verifier identity/version;
+- WCM verifier report digest;
+- trusted-key digests used by the WCM verifier;
 - DDC-WCM profile identifier;
 - DDC-WCM evidence-bundle digest;
 - final decision;
@@ -28,7 +31,7 @@ The receipt SHOULD preserve at least:
 ```json
 {
   "type": "ddc-wcm",
-  "profile": "ddc-wcm/0.1",
+  "profile": "ddc-wcm/0.2",
   "digest": "sha256:<digest-of-canonical-evidence-bundle>",
   "decision": "ALLOW",
   "reason_codes": []
@@ -37,7 +40,7 @@ The receipt SHOULD preserve at least:
 
 ## Canonicalization
 
-Interoperable profile v0.1 bindings SHOULD use RFC 8785 JSON Canonicalization Scheme (JCS) and SHA-256 as defined in [CANONICALIZATION.md](CANONICALIZATION.md).
+Interoperable profile v0.2 bindings SHOULD use RFC 8785 JSON Canonicalization Scheme (JCS) and SHA-256 as defined in [CANONICALIZATION.md](CANONICALIZATION.md).
 
 A receipt claiming interoperable digest equivalence MUST bind the exact canonical evidence bytes used for the assurance decision. Redacted or transformed evidence is a distinct artifact and requires its own digest.
 
